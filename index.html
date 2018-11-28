@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Train Scheduler</title>
+</head>
+
+<body>
+
+    <form>
+        <div>
+            <label for="train-name">Train name:</label>
+            <input type="text" id="train-name">
+        </div>
+
+        <div>
+            <label for="train-destination">Destination:</label>
+            <input type="text" id="destination">
+        </div>
+
+        <div>
+            <label for="train-frequency">Frequency (minutes):</label>
+            <input type="text" id="frequency">
+        </div>
+
+        <div>
+            <label for="first-train-time">First train time (HH:mm):</label>
+            <input type="text" id="first-time">
+        </div>
+        <div>
+            <input id="submit-button" type="submit" value="Submit">
+        </div>
+
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Train Name</th>
+                <th>Destination</th>
+                <th>First Train</th>
+                <th>Frequency (min)</th>
+                <th>Next Arrival</th>
+                <th>Minutes Away</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous"></script>
+    <script src="assets/javascript/train-schedule.js"></script>
+    <script src="assets/javascript/Moment.js"></script>
+</body>
+
+</html>
