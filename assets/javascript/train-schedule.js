@@ -16,15 +16,36 @@ $(document).ready(function () {
         const firstMinutes = parseInt(firstTrain.substr(3,2));
         console.log(firstHour);
         console.log(firstMinutes);
+        const firstT= moment();
+        const frequency = $("#frequency").val().trim()
+        firstT.hours(firstHour);
+        firstT.minutes(firstMinutes);
 
+        let nextT = moment(firstT).add(frequency, "m");
+        
+        let mAway = minutesAway();
 
         let trainInfo = {
             name: $("#train-name").val().trim(),
             destination: $("#destination").val().trim(),
-            firstTrain: $("#first-time").val().trim(),
-            frequency: $("#frequency").val().trim(),
-            
+            firstTrain: firstT.format("HH:mm"),
+            frequency: frequency,
+            nextTrain: nextT.format("HH:mm"),
+            minutesAway: mAway
         };
+
+        function minutesAway(){
+            let currentTime = moment();
+            let minutesAway = moment.duration(nextT.diff(currentTime, "m"), "m")._milliseconds/60000;
+            console.log(minutesAway);
+            while(minutesAway <= 0){
+                nextT.add(frequency, "m");
+                minutesAway = moment.duration(nextT.diff(currentTime, "m"), "m")._milliseconds/60000;
+            };
+            console.log(nextT);
+            //trainInfo.nextTrain = nextT.format("HH:mm");
+            return minutesAway;
+        }        
 
         $("#train-name").val("");
         $("#destination").val("");
@@ -32,9 +53,12 @@ $(document).ready(function () {
         $("#frequency").val("");
 
         trains.push(trainInfo);
+        trains.forEach(function(obj){
+            obj.minutesAway = minutesAway();
+        });
         createSchedule(trains);
         sessionStorage.setItem("trainSchedule", JSON.stringify(trains));
-        console.log(trains);
+        
     });
 
     function createSchedule(arr) {
@@ -42,20 +66,28 @@ $(document).ready(function () {
         $("tbody").empty();
 
         arr.forEach(function (obj) {
-            const tRow = $("<tr>");
-            const tName = $("<td>");
+            let tRow = $("<tr>");
+            let tName = $("<td>");
             tName.text(obj.name);
-            const tDest = $("<td>");
+            let tDest = $("<td>");
             tDest.text(obj.destination);
-            const tFirst = $("<td>");
+            let tFirst = $("<td>");
             tFirst.text(obj.firstTrain);
-            const tFreq = $("<td>");
+            let tFreq = $("<td>");
             tFreq.text(obj.frequency);
-            tRow.append(tName, tDest, tFirst, tFreq);
+            let tNext = $("<td>");
+            tNext.text(obj.nextTrain);
+            let tAway = $("<td>");
+            tAway.text(obj.minutesAway);
+
+
+            tRow.append(tName, tDest, tFirst, tFreq, tNext, tAway);
             $("tbody").append(tRow);
         });
 
     }
+
+    
 
     //An array of objects that wiore train information. We want to pull it from local storage and parse it so it becomes an array again.
     let trains = JSON.parse(sessionStorage.getItem("trainSchedule"));
@@ -64,6 +96,9 @@ $(document).ready(function () {
     if (!Array.isArray(trains)) {
         trains = [];
     }
+
+    
+
 
     //We want the table to show everything with current or no storage.
     createSchedule(trains);
