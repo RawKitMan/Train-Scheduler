@@ -25,39 +25,35 @@ $(document).ready(function () {
             nextTrain: nextT.format("HH:mm")
         };
 
-        /*function minutesAway(){
-            let currentTime = moment();
-            let minutesAway = moment.duration(nextT.diff(currentTime, "m"), "m")._milliseconds/60000;
-            console.log(minutesAway);
-            while(minutesAway <= 0){
-                nextT.add(frequency, "m");
-                minutesAway = moment.duration(nextT.diff(currentTime, "m"), "m")._milliseconds/60000;
-            };
-            return minutesAway;
-        }*/
-
         $("#train-name").val("");
         $("#destination").val("");
         $("#first-time").val("");
         $("#frequency").val("");
 
         trainInfo.minutesAway = minutesAway(trainInfo);
-        console.log(trainInfo);
-
         trains.push(trainInfo);
 
         createSchedule(trains);
-        sessionStorage.setItem("trainSchedule", JSON.stringify(trains));
+        localStorage.setItem("trainSchedule", JSON.stringify(trains));
 
+    });
+
+    $(document).on("click","#remove-button", function(){
+        let indexRemove = $(this).attr("button-index");
+
+        trains.splice(indexRemove,1);
+        createSchedule(trains);
+        localStorage.setItem("trainSchedule", JSON.stringify(trains));
     });
 
     function createSchedule(arr) {
 
         $("tbody").empty();
 
+        let index = 0;
+
         arr.forEach(function (obj) {
-            console.log(obj.minutesAway);
-            console.log(obj.nextMoment);
+            
             let tRow = $("<tr>");
             let tName = $("<td>");
             tName.text(obj.name);
@@ -78,10 +74,12 @@ $(document).ready(function () {
             let tAway = $("<td>");
             tAway.text(obj.minutesAway);
 
+            let tRemove = $("<td>");
+            tRemove.append(`<button type='remove' id='remove-button' button-index=${index}>Remove</button>`);
 
-
-            tRow.append(tName, tDest, tFirst, tFreq, tNext, tAway);
+            tRow.append(tName, tDest, tFirst, tFreq, tNext, tAway, tRemove);
             $("tbody").append(tRow);
+            index++;
         });
 
     }
@@ -92,7 +90,6 @@ $(document).ready(function () {
 
         while (minutesAway <= 0) {
             obj.nextMoment = obj.nextMoment.add(obj.frequency, "m");
-            console.log(obj.nextMoment);
             minutesAway = moment.duration(obj.nextMoment.diff(currentTime, "m"), "m")._milliseconds / 60000;
             console.log(minutesAway);
             obj.nextTrain = obj.nextMoment.format("HH:mm");
@@ -102,8 +99,10 @@ $(document).ready(function () {
         return minutesAway;
     }
 
+    
+
     //An array of objects that wiore train information. We want to pull it from local storage and parse it so it becomes an array again.
-    let trains = JSON.parse(sessionStorage.getItem("trainSchedule"));
+    let trains = JSON.parse(localStorage.getItem("trainSchedule"));
 
 
     //If there's nothing in the local storage to begin with, we create an empty array
@@ -112,16 +111,20 @@ $(document).ready(function () {
     }
 
 
-
+    //Because of the parsing of local storage, the Moment object stored in each trains array element comes out as a 
+    //string showing Zulu time. So we need to reassign each object's nextMoment property as a new Moment object so it can
+    //be utilized in the createSchedule function
     if (trains.length > 0) {
 
-        trains.forEach(function (obj) {//add function here to reassign the moment
+        trains.forEach(function (obj) {
 
             let newMoment = moment(obj.nextMoment);
             obj.nextMoment = newMoment;
-            console.log(newMoment);
         });
     }
     //We want the table to show everything with current or no storage.
     createSchedule(trains);
+
+  
+    
 });
