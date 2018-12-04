@@ -91,7 +91,6 @@ $(document).ready(function () {
         while (minutesAway <= 0) {
             obj.nextMoment = obj.nextMoment.add(obj.frequency, "m");
             minutesAway = moment.duration(obj.nextMoment.diff(currentTime, "m"), "m")._milliseconds / 60000;
-            console.log(minutesAway);
             obj.nextTrain = obj.nextMoment.format("HH:mm");
         };
 
