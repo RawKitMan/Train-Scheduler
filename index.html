@@ -6,18 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
+    <!--Bootstrap-->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
 
+    <!--Google font for the header-->
     <link href="https://fonts.googleapis.com/css?family=Ultra" rel="stylesheet">
 
+    <!--Extra styling-->
     <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
 
     <title>Train Scheduler</title>
 </head>
 
+
+<!--When the page loads, there is Javascript to cause the page to refresh every minute-->
 <body onload="Javascript:refreshPage(60000);">
 
+    <!--What is this page about???-->
     <div class="fluid-container bg-warning p-5 m-5 text-center header-border">
         <header class="header-text">Tucson Train Schedule</header>
     </div>
@@ -25,6 +31,7 @@
     <div class="container-fluid m-5">
         <div class="row">
             <div class="col-lg-3">
+                <!--Card where the user can enter a new train to add to the table-->
                 <div class="card mr-3 mb-2 bordered bg-warning card-border">
                     <div class="card-header">
                         Enter new train information below:
@@ -60,6 +67,7 @@
                 </div>
             </div>
 
+            <!--Table to store all the train information with a Remove button to remove a specific train from the table-->
             <div class="col-lg-8 table-responsive">
                 <div class="table-header bg-warning  p-3 bordered-table-header bordered-table">
                     Train Schedule
@@ -84,8 +92,14 @@
 
     <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous"></script>
+
+    <!--External file which contains the page's programming-->
     <script src="assets/javascript/train-schedule.js"></script>
+    
+    <!--Where we get our moment objects-->
     <script src="assets/javascript/Moment.js"></script>
+
+    <!--Page refresh function-->
     <script>
         function refreshPage(t) {
             setTimeout("location.reload(true);", t);
